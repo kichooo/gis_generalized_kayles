@@ -1,0 +1,20 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+
+\title{GIS Sprawozdanie I}
+\author{Krzysztof Burliński, Piotr Kałamucki}
+
+
+
+\begin{document}
+\maketitle
+\section{Treść zadania}
+Dany jest graf G=(V,E). Gracze na zmianę wybierają wierzchołek w grafie, który następnie jest usuwany razem ze wszystkimi przyległymi wierzchołkami. Gracz wygrywa wtedy i tylko wtedy gdy jego przeciwnik nie może wykonać ruchu, czyli nie ma już żadnego wierzchołka do wyboru.
+\section{Proponowane rozwiązanie}
+W grze uczestniczy 2 graczy, z czego przynajmniej jeden będzie graczem komputerowym. Drugim graczem może być zarówno człowiek jak i druga instancja gracza komputerowego. W tym celu zostanie udostępniony graficzny interfejs użytkownika. Umożliwi on rozpoczęcie gry, wizualizację aktualnego stanu grafu oraz wskazanie wierzchołków do usunięcia. Przy rozpoczęciu gry będzie możliwość wygenerowania losowego grafu lub wczytania jednego z kilku przykładowych.
+\section{Użyte technologie}
+Rozwiązanie zostanie zaimplementowane w języku Java. Do wykonania interfejsu użytkownika planujemy użycie bibliotek Swing, choć niewykluczona jest możliwość zastosowania biblioteki lepiej nadającej się do rysowania grafów. Dzięki zastosowaniu języka Java osiągniemy dużą przenośność kodu. 
+\section{Struktura oprogramowania}
+Aby ułatwić późniejsze wykorzystanie zaproponowanego przez nas rozwiązania zaplanowaliśmy podział programu na moduły. Pierwszym z modułów będzie Gra, która będzie zawierała implementację zasad gry i warunków zwycięstwa. Kolejnymi modułami będą AI, który będzie próbował podjąć najlepsze decyzję co do kolejnego ruchu, oraz Gracz, który będzie implementował interfejs użytkownika. Z algorytmicznego punktu widzenia najciekawszy będzie AI, ponadto będzie on prawdopodobnie górował złożonością pamięciową i obliczeniową nad pozostałymi modułami, więc będzie wymagał on największej uwagi. 
+\end{document}

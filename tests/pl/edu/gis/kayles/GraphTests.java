@@ -37,7 +37,7 @@ public class GraphTests {
     }
 
     @Test
-    public void shouldCleasGraph() {
+    public void shouldClearGraph() {
         Graph graph = new Graph();
         graph.addEdge("A", "B");
         graph.addEdge("A", "C");

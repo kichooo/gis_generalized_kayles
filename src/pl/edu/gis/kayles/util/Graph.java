@@ -76,25 +76,28 @@ public class Graph {
 		return getDistanceToFarthestVertex(new Vertex(vertexFrom));
 	}
 	public int getDistanceToFarthestVertex(Vertex vertexFrom) {
-		for (Vertex v: neighbourList.keySet()) {
+		for (Vertex v: getVertices()) {
 			v.setColor(Vertex.Color.UNVISITED);
 			v.setDistance(Integer.MAX_VALUE);
 		}
 		Queue<Vertex> queue = new java.util.LinkedList<Vertex>();
 		queue.offer(vertexFrom);
 		vertexFrom.setColor(Vertex.Color.VISITED);
+		vertexFrom.setDistance(0);
+		System.out.println("nowy");
 		int farthest = 0;
 		while (!queue.isEmpty()) {
 			Vertex vertex = queue.poll();
+			System.out.println(vertex.toString());
 			if (farthest < vertex.getDistance())
 				farthest = vertex.getDistance();
 			for (Vertex v : getNeighbours(vertex)) {
-				if (v.getDistance() > vertex.getDistance() + 1) {
-					v.setDistance(vertex.getDistance() + 1);
-				}
 				if (v.getColor() == Vertex.Color.UNVISITED) {
+					if (v.getDistance() > vertex.getDistance() + 1) {
+						v.setDistance(vertex.getDistance() + 1);
+					}
 					v.setColor(Vertex.Color.VISITED);
-					
+					System.out.println("Adding to queue" + v.toString());
 					queue.offer(v);
 				}
 

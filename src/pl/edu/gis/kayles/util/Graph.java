@@ -3,71 +3,111 @@ package pl.edu.gis.kayles.util;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
- * Date: 30.11.13
- * Time: 12:26
+ * Created with IntelliJ IDEA. Date: 30.11.13 Time: 12:26
  */
 public class Graph {
-    private Map<String, Set<String>> neighbourList;
+	private Map<Vertex, Set<Vertex>> neighbourList;
 
-    public Graph() {
-        neighbourList = new HashMap<String, Set<String>>();
-    }
+	public Graph() {
+		neighbourList = new HashMap<Vertex, Set<Vertex>>();
+	}
 
-    public void kaylesRemove(String vertex) {
-        List<String> removedVertices = new ArrayList<String>(Arrays.asList(vertex));
+	public void kaylesRemove(final String vertex) {
+		kaylesRemove(new Vertex(vertex));
+	}
 
-        Set<String> neighbours = neighbourList.remove(vertex);
-        for (String neighbour : neighbours) {
-            neighbourList.remove(neighbour);
-            removedVertices.add(neighbour);
-        }
+	public void kaylesRemove(Vertex vertex) {
+		List<Vertex> removedVertices = new ArrayList<Vertex>(
+				Arrays.asList(vertex));
 
-        for (Set<String> v : neighbourList.values()) {
-            v.removeAll(removedVertices);
-        }
+		Set<Vertex> neighbours = neighbourList.remove(vertex);
+		for (Vertex neighbour : neighbours) {
+			neighbourList.remove(neighbour);
+			removedVertices.add(neighbour);
+		}
 
-    }
+		for (Set<Vertex> v : neighbourList.values()) {
+			v.removeAll(removedVertices);
+		}
 
-    public void addVertex(String vertex) {
-        if (!neighbourList.containsKey(vertex)) {
-            neighbourList.put(vertex, new HashSet<String>());
-        }
-    }
+	}
 
-    public void addEdge(String vertexFrom, String vertexTo) {
-        Set<String> fromVertexList = neighbourList.get(vertexFrom);
-        Set<String> toVertexList = neighbourList.get(vertexTo);
+	public void addVertex(Vertex vertex) {
+		if (!neighbourList.containsKey(vertex)) {
+			neighbourList.put(vertex, new HashSet<Vertex>());
+		}
+	}
 
-        if (fromVertexList == null) {
-            neighbourList.put(vertexFrom, new HashSet<String>(Arrays.asList(vertexTo)));
-        } else {
-            fromVertexList.add(vertexTo);
-        }
-        if (toVertexList == null) {
-            neighbourList.put(vertexTo, new HashSet<String>(Arrays.asList(vertexFrom)));
-        } else {
-            toVertexList.add(vertexFrom);
-        }
-    }
+	public void addEdge(final String vertexFrom, final String vertexTo) {
+		addEdge(new Vertex(vertexFrom), new Vertex(vertexTo));
+	}
 
-    public Set<String> getVertices() {
-        return neighbourList.keySet();
-    }
+	public void addEdge(Vertex vertexFrom, Vertex vertexTo) {
+		Set<Vertex> fromVertexList = neighbourList.get(vertexFrom);
+		Set<Vertex> toVertexList = neighbourList.get(vertexTo);
 
-    public Set<String> getNeighbours(String vertex) {
-        return neighbourList.get(vertex);
-    }
+		if (fromVertexList == null) {
+			neighbourList.put(vertexFrom,
+					new HashSet<Vertex>(Arrays.asList(vertexTo)));
+		} else {
+			fromVertexList.add(vertexTo);
+		}
+		if (toVertexList == null) {
+			neighbourList.put(vertexTo,
+					new HashSet<Vertex>(Arrays.asList(vertexFrom)));
+		} else {
+			toVertexList.add(vertexFrom);
+		}
+	}
 
-    public int getDistanceToFarthestVertex(String vertexFrom) {
-        return -1; //implement me
-    }
+	public Set<Vertex> getVertices() {
+		return neighbourList.keySet();
+	}
 
-    public int getExtendedNeighboursCount(String vertex) {
-        Set<String> set = new HashSet<String>();
-        for (String v : getNeighbours(vertex)) {
-            set.addAll(getNeighbours(v));
-        }
-        return set.size();
-    }
+	public Set<Vertex> getNeighbours(final String vertex) {
+		return getNeighbours(new Vertex(vertex));
+	}
+
+	public Set<Vertex> getNeighbours(Vertex vertex) {
+		return neighbourList.get(vertex);
+	}
+
+	public int getDistanceToFarthestVertex(String vertexFrom) {
+		return getDistanceToFarthestVertex(new Vertex(vertexFrom));
+	}
+	public int getDistanceToFarthestVertex(Vertex vertexFrom) {
+		for (Vertex v: neighbourList.keySet()) {
+			v.setColor(Vertex.Color.UNVISITED);
+			v.setDistance(Integer.MAX_VALUE);
+		}
+		Queue<Vertex> queue = new java.util.LinkedList<Vertex>();
+		queue.offer(vertexFrom);
+		vertexFrom.setColor(Vertex.Color.VISITED);
+		int farthest = 0;
+		while (!queue.isEmpty()) {
+			Vertex vertex = queue.poll();
+			if (farthest < vertex.getDistance())
+				farthest = vertex.getDistance();
+			for (Vertex v : getNeighbours(vertex)) {
+				if (v.getDistance() > vertex.getDistance() + 1) {
+					v.setDistance(vertex.getDistance() + 1);
+				}
+				if (v.getColor() == Vertex.Color.UNVISITED) {
+					v.setColor(Vertex.Color.VISITED);
+					
+					queue.offer(v);
+				}
+
+			}
+		}
+		return farthest; // implement me
+	}
+
+	public int getExtendedNeighboursCount(Vertex vertex) {
+		Set<Vertex> set = new HashSet<Vertex>();
+		for (Vertex v : getNeighbours(vertex)) {
+			set.addAll(getNeighbours(v));
+		}
+		return set.size();
+	}
 }

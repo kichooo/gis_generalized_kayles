@@ -1,4 +1,4 @@
-package pl.edu.gis.kayles;
+package pl.edu.gis.kayles.util;
 
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class Graph {
         }
     }
 
-    public Set getVertices() {
+    public Set<String> getVertices() {
         return neighbourList.keySet();
     }
 
@@ -59,4 +59,15 @@ public class Graph {
         return neighbourList.get(vertex);
     }
 
+    public int getDistanceToFarthestVertex(String vertexFrom) {
+        return -1; //implement me
+    }
+
+    public int getExtendedNeighboursCount(String vertex) {
+        Set<String> set = new HashSet<String>();
+        for (String v : getNeighbours(vertex)) {
+            set.addAll(getNeighbours(v));
+        }
+        return set.size();
+    }
 }

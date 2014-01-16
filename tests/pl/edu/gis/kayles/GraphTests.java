@@ -2,6 +2,7 @@ package pl.edu.gis.kayles;
 
 import org.junit.Assert;
 import org.junit.Test;
+import pl.edu.gis.kayles.util.Graph;
 
 import java.util.Arrays;
 import java.util.HashSet;

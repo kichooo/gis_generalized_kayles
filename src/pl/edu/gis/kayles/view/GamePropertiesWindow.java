@@ -28,6 +28,8 @@ public class GamePropertiesWindow extends JFrame {
         goButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                //todo do something more proper here, pass execution to controller or something
                 GraphWindow graphWindow = new GraphWindow();
             }
         });

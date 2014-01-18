@@ -72,9 +72,12 @@ public class GraphWindow extends JFrame {
             {
                 Object cell = graphComponent.getCellAt(e.getX(), e.getY());
 
-                if (cell != null)
+                if (cell != null && !"edge".equals(graph.getLabel(cell).toLowerCase()))
                 {
-                    System.out.println("cell="+graph.getLabel(cell));
+                    int decision = JOptionPane.showConfirmDialog(graphComponent, "Delete this node?");
+                    if (decision == JOptionPane.YES_OPTION) {
+                        //todo handle delete!
+                    }
                 }
             }
         });

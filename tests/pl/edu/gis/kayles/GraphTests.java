@@ -20,6 +20,7 @@ public class GraphTests {
 		graph.addEdge("A", "B");
 
 		Assert.assertEquals(graph.getVertices().size(), 2);
+		
 		Assert.assertTrue(graph.getNeighbours("A").contains(new Vertex("B")));
 		Assert.assertEquals(graph.getNeighbours("A").size(), 1);
 		Assert.assertTrue(graph.getNeighbours("B").contains(new Vertex("A")));
@@ -52,7 +53,6 @@ public class GraphTests {
 		graph.addEdge("E", "F");
 
 		graph.kaylesRemove("A");
-
 		Assert.assertEquals(graph.getVertices().size(), 1);
 		Assert.assertTrue(graph.getVertices().contains(new Vertex("F")));
 		Assert.assertTrue(graph.getNeighbours("F").isEmpty());

@@ -6,77 +6,75 @@ import java.util.*;
  * Created with IntelliJ IDEA. Date: 30.11.13 Time: 12:26
  */
 public class Graph {
-	private Map<Vertex, Set<Vertex>> neighbourList;
+	private Map<String, Vertex> vertices;
 
 	public Graph() {
-		neighbourList = new HashMap<Vertex, Set<Vertex>>();
+		vertices = new HashMap<String, Vertex>();
 	}
 
 	public void kaylesRemove(final String vertex) {
-		kaylesRemove(new Vertex(vertex));
+		kaylesRemove(vertices.get(vertex));
 	}
 
 	public void kaylesRemove(Vertex vertex) {
-		List<Vertex> removedVertices = new ArrayList<Vertex>(
-				Arrays.asList(vertex));
+		Set<Vertex> verticesToRemove = new HashSet<Vertex>();
 
-		Set<Vertex> neighbours = neighbourList.remove(vertex);
-		for (Vertex neighbour : neighbours) {
-			neighbourList.remove(neighbour);
-			removedVertices.add(neighbour);
-		}
+		verticesToRemove.addAll(vertex.getNeighbours());
+		verticesToRemove.add(vertex);
 
-		for (Set<Vertex> v : neighbourList.values()) {
-			v.removeAll(removedVertices);
+		for (Vertex v : verticesToRemove) {
+			for (Vertex neighbour : v.getNeighbours()) {
+				neighbour.getNeighbours().remove(v);
+			}
+			vertices.remove(v.toString());
 		}
 
 	}
 
 	public void addVertex(Vertex vertex) {
-		if (!neighbourList.containsKey(vertex)) {
-			neighbourList.put(vertex, new HashSet<Vertex>());
-		}
+		vertices.put(vertex.toString(), vertex);
 	}
 
-	public void addEdge(final String vertexFrom, final String vertexTo) {
-		addEdge(new Vertex(vertexFrom), new Vertex(vertexTo));
+	public void addEdge(final String vertexFromName, final String vertexToName) {
+		final Vertex vertexFrom, vertexTo;
+		if (!vertices.containsKey(vertexFromName)) {
+			vertexFrom = new Vertex(vertexFromName);
+			vertices.put(vertexFromName, vertexFrom);
+		} else
+			vertexFrom = vertices.get(vertexFromName);
+
+		if (!vertices.containsKey(vertexToName)) {
+			vertexTo = new Vertex(vertexToName);
+			vertices.put(vertexToName, vertexTo);
+		} else
+			vertexTo = vertices.get(vertexToName);
+
+		addEdge(vertexFrom, vertexTo);
 	}
 
 	public void addEdge(Vertex vertexFrom, Vertex vertexTo) {
-		Set<Vertex> fromVertexList = neighbourList.get(vertexFrom);
-		Set<Vertex> toVertexList = neighbourList.get(vertexTo);
-
-		if (fromVertexList == null) {
-			neighbourList.put(vertexFrom,
-					new HashSet<Vertex>(Arrays.asList(vertexTo)));
-		} else {
-			fromVertexList.add(vertexTo);
-		}
-		if (toVertexList == null) {
-			neighbourList.put(vertexTo,
-					new HashSet<Vertex>(Arrays.asList(vertexFrom)));
-		} else {
-			toVertexList.add(vertexFrom);
-		}
+		vertexFrom.getNeighbours().add(vertexTo);
+		vertexTo.getNeighbours().add(vertexFrom);
 	}
 
-	public Set<Vertex> getVertices() {
-		return neighbourList.keySet();
+	public Collection<Vertex> getVertices() {
+		return vertices.values();
 	}
 
-	public Set<Vertex> getNeighbours(final String vertex) {
-		return getNeighbours(new Vertex(vertex));
+	public Set<Vertex> getNeighbours(final String vertexName) {
+		return vertices.get(vertexName).getNeighbours();
 	}
 
 	public Set<Vertex> getNeighbours(Vertex vertex) {
-		return neighbourList.get(vertex);
+		return vertex.getNeighbours();
 	}
 
 	public int getDistanceToFarthestVertex(String vertexFrom) {
-		return getDistanceToFarthestVertex(new Vertex(vertexFrom));
+		return getDistanceToFarthestVertex(vertices.get(vertexFrom));
 	}
+
 	public int getDistanceToFarthestVertex(Vertex vertexFrom) {
-		for (Vertex v: getVertices()) {
+		for (Vertex v : getVertices()) {
 			v.setColor(Vertex.Color.UNVISITED);
 			v.setDistance(Integer.MAX_VALUE);
 		}
@@ -84,11 +82,11 @@ public class Graph {
 		queue.offer(vertexFrom);
 		vertexFrom.setColor(Vertex.Color.VISITED);
 		vertexFrom.setDistance(0);
-		System.out.println("nowy");
+		// System.out.println("nowy");
 		int farthest = 0;
 		while (!queue.isEmpty()) {
 			Vertex vertex = queue.poll();
-			System.out.println(vertex.toString());
+			// System.out.println(vertex.toString());
 			if (farthest < vertex.getDistance())
 				farthest = vertex.getDistance();
 			for (Vertex v : getNeighbours(vertex)) {
@@ -97,7 +95,7 @@ public class Graph {
 						v.setDistance(vertex.getDistance() + 1);
 					}
 					v.setColor(Vertex.Color.VISITED);
-					System.out.println("Adding to queue" + v.toString());
+					// System.out.println("Adding to queue" + v.toString());
 					queue.offer(v);
 				}
 

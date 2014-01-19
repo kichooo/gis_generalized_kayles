@@ -6,10 +6,16 @@ import java.util.*;
  * Created with IntelliJ IDEA. Date: 30.11.13 Time: 12:26
  */
 public class Graph {
-	private Map<String, Vertex> vertices;
+	private Map<String, Vertex> vertices = new HashMap<String, Vertex>();
 
 	public Graph() {
-		vertices = new HashMap<String, Vertex>();
+	}
+
+	public Graph(int vertices) {
+		
+		for (int i = 0; i < vertices; i++) {
+
+		}
 	}
 
 	public void kaylesRemove(final String vertex) {
@@ -103,20 +109,24 @@ public class Graph {
 		}
 		return farthest; // implement me
 	}
+
 	public boolean isGameOver() {
 		return vertices.isEmpty();
 	}
+
 	public Vertex makeDecision(float param1, float param2, float param3) {
-		if (vertices.isEmpty()) return null;
+		if (vertices.isEmpty())
+			return null;
 		for (Vertex v : this.vertices.values()) {
 			v.setFarthest(param1 * getDistanceToFarthestVertex(v));
 			v.setExtended(param2 * getExtendedNeighboursCount(v));
 			v.setProximity(param3 * getNeighbours(v).size());
 		}
-		// Now, for each vertex, calculate ditance to closest relative. Try to find vertex with the biggest distance.
+		// Now, for each vertex, calculate ditance to closest relative. Try to
+		// find vertex with the biggest distance.
 		float biggestDistance = 0;
 		Vertex winningVertex = null;
-		
+
 		for (Vertex v : this.vertices.values()) {
 			float distanceToClosestRelative = Float.MAX_VALUE;
 			for (Vertex other : this.vertices.values()) {
@@ -136,8 +146,10 @@ public class Graph {
 				biggestDistance = distanceToClosestRelative;
 				winningVertex = v;
 			}
-			// System.out.println(distanceToClosestRelative + ", " + v.getExtended() + ", " + v.getFarthest() + ", " + v.getProximity());
-			
+			// System.out.println(distanceToClosestRelative + ", " +
+			// v.getExtended() + ", " + v.getFarthest() + ", " +
+			// v.getProximity());
+
 		}
 		return winningVertex;
 	}

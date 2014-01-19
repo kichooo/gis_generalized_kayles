@@ -122,9 +122,12 @@ public class Graph {
 			for (Vertex other : this.vertices.values()) {
 				float distance = (v.getExtended() - other.getExtended())
 						* (v.getExtended() - other.getExtended())
+						* (v.getExtended() - other.getExtended())
 						+ (v.getFarthest() - other.getFarthest())
 						* (v.getFarthest() - other.getFarthest())
+						* (v.getFarthest() - other.getFarthest())
 						+ (v.getProximity() - other.getProximity())
+						* (v.getProximity() - other.getProximity())
 						* (v.getProximity() - other.getProximity());
 				if (distance < distanceToClosestRelative)
 					distanceToClosestRelative = distance;
@@ -133,7 +136,7 @@ public class Graph {
 				biggestDistance = distanceToClosestRelative;
 				winningVertex = v;
 			}
-			System.out.println(distanceToClosestRelative + ", " + v.getExtended() + ", " + v.getFarthest() + ", " + v.getProximity());
+			// System.out.println(distanceToClosestRelative + ", " + v.getExtended() + ", " + v.getFarthest() + ", " + v.getProximity());
 			
 		}
 		return winningVertex;

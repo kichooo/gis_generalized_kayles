@@ -73,4 +73,29 @@ public class GraphTests {
 		Assert.assertEquals(2, graph.getDistanceToFarthestVertex("3"));
 		Assert.assertEquals(3, graph.getDistanceToFarthestVertex("6"));
 	}
+	
+	@Test
+	public void testGame() {
+		Graph graph = new Graph();
+		graph.addEdge("1", "2");
+		graph.addEdge("1", "5");
+		graph.addEdge("2", "3");
+		graph.addEdge("2", "5");
+		graph.addEdge("3", "4");
+		graph.addEdge("4", "5");
+		graph.addEdge("4", "6");
+		graph.addEdge("6", "7");
+		graph.addEdge("7", "8");
+		graph.addEdge("7", "9");
+		graph.addEdge("7", "10");
+		graph.addEdge("10", "9");
+		graph.addEdge("11", "9");
+		graph.addEdge("12", "11");
+		graph.addEdge("12", "2");
+		Assert.assertFalse(graph.isGameOver());
+		Assert.assertNotEquals(graph.makeDecision(1, 1, 1), null);
+		
+		
+
+	}
 }

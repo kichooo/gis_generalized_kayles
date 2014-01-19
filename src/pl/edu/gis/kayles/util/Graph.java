@@ -103,6 +103,41 @@ public class Graph {
 		}
 		return farthest; // implement me
 	}
+	public boolean isGameOver() {
+		return vertices.isEmpty();
+	}
+	public Vertex makeDecision(float param1, float param2, float param3) {
+		if (vertices.isEmpty()) return null;
+		for (Vertex v : this.vertices.values()) {
+			v.setFarthest(param1 * getDistanceToFarthestVertex(v));
+			v.setExtended(param2 * getExtendedNeighboursCount(v));
+			v.setProximity(param3 * getNeighbours(v).size());
+		}
+		// Now, for each vertex, calculate ditance to closest relative. Try to find vertex with the biggest distance.
+		float biggestDistance = 0;
+		Vertex winningVertex = null;
+		
+		for (Vertex v : this.vertices.values()) {
+			float distanceToClosestRelative = Float.MAX_VALUE;
+			for (Vertex other : this.vertices.values()) {
+				float distance = (v.getExtended() - other.getExtended())
+						* (v.getExtended() - other.getExtended())
+						+ (v.getFarthest() - other.getFarthest())
+						* (v.getFarthest() - other.getFarthest())
+						+ (v.getProximity() - other.getProximity())
+						* (v.getProximity() - other.getProximity());
+				if (distance < distanceToClosestRelative)
+					distanceToClosestRelative = distance;
+			}
+			if (distanceToClosestRelative >= biggestDistance) {
+				biggestDistance = distanceToClosestRelative;
+				winningVertex = v;
+			}
+			System.out.println(distanceToClosestRelative + ", " + v.getExtended() + ", " + v.getFarthest() + ", " + v.getProximity());
+			
+		}
+		return winningVertex;
+	}
 
 	public int getExtendedNeighboursCount(Vertex vertex) {
 		Set<Vertex> set = new HashSet<Vertex>();

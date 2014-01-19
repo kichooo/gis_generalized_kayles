@@ -12,11 +12,39 @@ public class Vertex {
 	private Color color = Color.UNVISITED;
 	private int distance = 0;
 	private Set<Vertex> neighbours;
+	private float farthest = 0;
+	private float proximity = 0;
+	private float extended = 0;
 
 	public Vertex(final String name) {
 		this.name = name;
 		this.neighbours = new HashSet<>();
 	}
+	
+	public float getFarthest() {
+		return farthest;
+	}
+
+	public void setFarthest(float farthest) {
+		this.farthest = farthest;
+	}
+
+	public float getProximity() {
+		return proximity;
+	}
+
+	public void setProximity(float proximity) {
+		this.proximity = proximity;
+	}
+
+	public float getExtended() {
+		return extended;
+	}
+
+	public void setExtended(float extended) {
+		this.extended = extended;
+	}
+
 
 	public Set<Vertex> getNeighbours() {
 		return neighbours;

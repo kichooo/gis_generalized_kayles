@@ -11,13 +11,33 @@ public class Graph {
 	public Graph() {
 	}
 
-	public Graph(int vertices) {
-		
-		for (int i = 0; i < vertices; i++) {
-
+	/**
+	 * Create new random graph/
+	 * @param verticesCount number of vertices to create.
+	 * @param edgesCount number of edges to create.
+	 */
+	public Graph(int verticesCount, int edgesCount) {
+		Random r = new Random(1337);
+		for (int i = 0; i < verticesCount ; i++) {
+			vertices.put(Integer.toString(i), new Vertex(Integer.toString(i)));
+		}
+		for (int i = 0; i < edgesCount * 2 ; i++) {
+			int r1 = r.nextInt(verticesCount);
+			int r2 = r.nextInt(verticesCount);
+			if (r2 == r1) r1 = (r1+1) % verticesCount;
+			addEdge(Integer.toString(r1), Integer.toString(r2));
 		}
 	}
 
+	/**
+	 * Create new random graph/
+	 * @param verticesCount number of vertices to create.
+	 */
+	public Graph(int verticesCount) {
+		
+		this(verticesCount, verticesCount * 3);
+	}
+	
 	public void kaylesRemove(final String vertex) {
 		kaylesRemove(vertices.get(vertex));
 	}

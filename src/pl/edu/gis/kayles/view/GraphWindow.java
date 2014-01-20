@@ -8,11 +8,15 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.picking.PickedState;
+import pl.edu.gis.kayles.Game;
 import pl.edu.gis.kayles.util.Graph;
 import pl.edu.gis.kayles.util.Vertex;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,19 +41,44 @@ public class GraphWindow extends JFrame {
     }
 
     public void showGraph(Graph g) {
+        getContentPane().removeAll();
         edu.uci.ics.jung.graph.Graph<String, String> graph = transformToGuiGraph(g);
 
         Layout<String, String> layout = new CircleLayout<>(graph);
         layout.setSize(new Dimension(WIDTH, HEIGHT));
-        VisualizationViewer<String, String> visualizationServer = new VisualizationViewer<>(layout);
+        VisualizationViewer<String, String> vv = new VisualizationViewer<>(layout);
 
         DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
         gm.setMode(DefaultModalGraphMouse.Mode.PICKING);
 
-        visualizationServer.setGraphMouse(gm);
+        vv.setGraphMouse(gm);
 
+        final PickedState<String> pickedState = vv.getPickedVertexState();
 
-        getContentPane().add(visualizationServer);
+        pickedState.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Object subject = e.getItem();
+                if (pickedState.isPicked((String) subject)) {
+                    int response = JOptionPane.showConfirmDialog(getContentPane(), "Delete this node?");
+                    if (response == JOptionPane.YES_OPTION) {
+                        Graph g = Game.nextMove((String) subject, false);
+                        if (g.isGameOver()) {
+                            JOptionPane.showMessageDialog(getContentPane(), "You have won!");
+                        } else {
+                            g = Game.nextMove(null, false);
+                            if (g.isGameOver()) {
+                                JOptionPane.showMessageDialog(getContentPane(), "You have lost!");
+                            } else {
+                                showGraph(g);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        getContentPane().add(vv);
         pack();
         setVisible(true);
 

@@ -49,11 +49,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <model>
-            <item value="10"/>
-            <item value="30"/>
-            <item value="50"/>
-          </model>
+          <model/>
         </properties>
       </component>
       <hspacer id="3bb04">

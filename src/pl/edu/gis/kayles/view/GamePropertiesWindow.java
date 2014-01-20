@@ -1,9 +1,13 @@
 package pl.edu.gis.kayles.view;
 
+import pl.edu.gis.kayles.Game;
+import pl.edu.gis.kayles.util.GameProperties;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,12 +29,27 @@ public class GamePropertiesWindow extends JFrame {
 
     public GamePropertiesWindow() {
 
+        String[] choices = {"10", "30", "50"};
+        comboBox1.setModel(new DefaultComboBoxModel(choices));
+
         goButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                GameProperties properties = new GameProperties();
+                properties.setGraphSize((String) comboBox1.getSelectedItem());
+                properties.setWa1(P1AValueField.getText());
+                properties.setWb1(P1BValueField.getText());
+                properties.setWc1(P1CValueField.getText());
 
-                //todo do something more proper here, pass execution to controller or something
-                GraphWindow graphWindow = new GraphWindow();
+                boolean singlePlayer = a1RadioButton.isSelected();
+                properties.setSinglePlayer(singlePlayer);
+                if (!singlePlayer) {
+                    properties.setWa2(P2AValueField.getText());
+                    properties.setWb2(P2BValueField.getText());
+                    properties.setWc2(P2CValueField.getText());
+                }
+
+                Game.startGame(properties);
             }
         });
 
@@ -38,6 +57,7 @@ public class GamePropertiesWindow extends JFrame {
         pack();
         setVisible(true);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     {

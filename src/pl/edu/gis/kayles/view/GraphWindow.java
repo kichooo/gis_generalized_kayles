@@ -1,14 +1,18 @@
 package pl.edu.gis.kayles.view;
 
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.view.mxGraph;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
+import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import pl.edu.gis.kayles.util.Graph;
+import pl.edu.gis.kayles.util.Vertex;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,70 +21,53 @@ import java.util.Map;
  */
 public class GraphWindow extends JFrame {
 
-    private mxGraph graph;
-    private Object parent;
+    private boolean singlePlayer;
 
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
 
 
-    public GraphWindow() {
+    public GraphWindow(boolean singlePlayer) {
         super("generalized kayles");
 
-        graph = new mxGraph();
-        parent = graph.getDefaultParent();
+        this.singlePlayer = singlePlayer;
 
-        setSize(WIDTH, HEIGHT);
-        setVisible(true);
-        setLocationRelativeTo(null);
-        mxGraphComponent graphComponent = new mxGraphComponent(graph);
-        getContentPane().add(graphComponent);
+
+
     }
 
     public void showGraph(Graph g) {
+        edu.uci.ics.jung.graph.Graph<String, String> graph = transformToGuiGraph(g);
 
-        getContentPane().removeAll();
+        Layout<String, String> layout = new CircleLayout<>(graph);
+        layout.setSize(new Dimension(WIDTH, HEIGHT));
+        VisualizationViewer<String, String> visualizationServer = new VisualizationViewer<>(layout);
 
-        graph = new mxGraph();
-        parent = graph.getDefaultParent();
+        DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
+        gm.setMode(DefaultModalGraphMouse.Mode.PICKING);
 
-        graph.getModel().beginUpdate();
-        Map<Object, Object> inserted = new HashMap<Object, Object>();
-        try {
-            int x = 10;
-            int y = 10;
-            for (Object v : g.getVertices()) {
-                Object o = graph.insertVertex(parent, v.toString(), v, x, y, 10, 10);
-                inserted.put(v, o);
+        visualizationServer.setGraphMouse(gm);
 
-                x += 20;
-                if (x >= WIDTH) {
-                    y += 20;
-                    x = 10;
-                }
-            }
-        } finally {
-            graph.getModel().endUpdate();
+
+        getContentPane().add(visualizationServer);
+        pack();
+        setVisible(true);
+
+    }
+
+    private edu.uci.ics.jung.graph.Graph<String, String> transformToGuiGraph(Graph g) {
+        edu.uci.ics.jung.graph.Graph<String, String> graph = new SparseMultigraph<>();
+        for (Vertex v : g.getVertices()) {
+            graph.addVertex(v.toString());
         }
-        final mxGraphComponent graphComponent = new mxGraphComponent(graph);
-        getContentPane().add(graphComponent);
-
-        graphComponent.getGraphControl().addMouseListener(new MouseAdapter()
-        {
-
-            public void mouseReleased(MouseEvent e)
-            {
-                Object cell = graphComponent.getCellAt(e.getX(), e.getY());
-
-                if (cell != null && !"edge".equals(graph.getLabel(cell).toLowerCase()))
-                {
-                    int decision = JOptionPane.showConfirmDialog(graphComponent, "Delete this node?");
-                    if (decision == JOptionPane.YES_OPTION) {
-                        //todo handle delete!
-                    }
+        for (Vertex from : g.getVertices()) {
+            for (Vertex to : from.getNeighbours()) {
+                if (!graph.containsEdge(to.toString()+"-"+from.toString())) {
+                    graph.addEdge(from.toString()+"-"+to.toString(), from.toString(), to.toString());
                 }
             }
-        });
+        }
+        return graph;
     }
 
 }

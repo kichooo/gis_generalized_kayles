@@ -1,9 +1,10 @@
 package pl.edu.gis.kayles.util;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Vertex {
+public class Vertex implements Serializable {
 	public enum Color {
 		VISITED, UNVISITED
 	}

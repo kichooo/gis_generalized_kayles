@@ -15,6 +15,8 @@ import pl.edu.gis.kayles.util.Vertex;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -29,6 +31,7 @@ public class GraphWindow extends JFrame {
 
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
+    private boolean secondAiPlayer = false;
 
 
     public GraphWindow(boolean singlePlayer) {
@@ -55,30 +58,54 @@ public class GraphWindow extends JFrame {
 
         final PickedState<String> pickedState = vv.getPickedVertexState();
 
-        pickedState.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                Object subject = e.getItem();
-                if (pickedState.isPicked((String) subject)) {
-                    int response = JOptionPane.showConfirmDialog(getContentPane(), "Delete this node?");
-                    if (response == JOptionPane.YES_OPTION) {
-                        Graph g = Game.nextMove((String) subject, false);
-                        if (g.isGameOver()) {
-                            JOptionPane.showMessageDialog(getContentPane(), "You have won!");
-                        } else {
-                            g = Game.nextMove(null, false);
+        if (singlePlayer) {
+            pickedState.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    Object subject = e.getItem();
+                    if (pickedState.isPicked((String) subject)) {
+                        int response = JOptionPane.showConfirmDialog(getContentPane(), "Delete this node? ("+subject+")");
+                        if (response == JOptionPane.YES_OPTION) {
+                            Graph g = Game.nextMove((String) subject, false);
                             if (g.isGameOver()) {
-                                JOptionPane.showMessageDialog(getContentPane(), "You have lost!");
+                                JOptionPane.showMessageDialog(getContentPane(), "You have won!");
                             } else {
-                                showGraph(g);
+                                g = Game.nextMove(null, false);
+                                if (g.isGameOver()) {
+                                    JOptionPane.showMessageDialog(getContentPane(), "You have lost!");
+                                } else {
+                                    showGraph(g);
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
 
-        getContentPane().add(vv);
+        if (singlePlayer) {
+            getContentPane().add(vv);
+        } else {
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+            JButton button = new JButton("Next Player");
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    secondAiPlayer = false;
+                    Graph g = Game.nextMove(null, secondAiPlayer);
+                    secondAiPlayer = !secondAiPlayer;
+                    if (g.isGameOver()) {
+                        JOptionPane.showMessageDialog(getContentPane(), "Player "+(secondAiPlayer?2:1)+" has won!");
+                    } else {
+                        showGraph(g);
+                    }
+                }
+            });
+            panel.add(button, BorderLayout.NORTH);
+            panel.add(vv, BorderLayout.SOUTH);
+            getContentPane().add(panel);
+        }
         pack();
         setVisible(true);
 

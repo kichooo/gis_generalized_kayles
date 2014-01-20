@@ -34,9 +34,13 @@ public class Game {
             return graph;
         } else {
             if (secondAiPlayer) {
-                graph.makeDecision(properties.getWa2(), properties.getWb2(), properties.getWc2());
+                Vertex v = graph.makeDecision(properties.getWa2(), properties.getWb2(), properties.getWc2());
+                System.out.println(v.toString());
+                graph.kaylesRemove(v);
             } else {
-                graph.makeDecision(properties.getWa1(), properties.getWb1(), properties.getWc1());
+                Vertex v = graph.makeDecision(properties.getWa1(), properties.getWb1(), properties.getWc1());
+                System.out.println(v.toString());
+                graph.kaylesRemove(v);
             }
             return graph;
         }

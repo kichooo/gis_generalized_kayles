@@ -25,7 +25,7 @@ public class Game {
         properties = gameProperties;
         graph = new Graph(gameProperties.getGraphSize());
         graphWindow = new GraphWindow(gameProperties.isSinglePlayer());
-        graphWindow.showGraph(graph);
+        graphWindow.showGraph(graph, false);
     }
 
     public static Graph nextMove(String vertex, boolean secondAiPlayer) {

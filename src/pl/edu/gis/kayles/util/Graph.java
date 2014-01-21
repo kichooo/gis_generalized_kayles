@@ -3,6 +3,7 @@ package pl.edu.gis.kayles.util;
 import java.util.*;
 
 /**
+ * Basic class of algorithm. Contains class data structure and heurestic method. 
  * Created with IntelliJ IDEA. Date: 30.11.13 Time: 12:26
  */
 public class Graph {

@@ -5,6 +5,10 @@ import java.util.Random;
 import pl.edu.gis.kayles.util.Graph;
 import pl.edu.gis.kayles.util.Vertex;
 
+
+/**
+ * Console program, which finds best parameters for the heuristic function.
+ */
 public class ArgumentChooser {
 	public static boolean fight(float pa1, float pa2, float pa3, float pb1,
 			float pb2, float pb3) {

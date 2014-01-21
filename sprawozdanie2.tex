@@ -44,9 +44,26 @@ Proponowana heurestyka będzie starała się promować wierzchołki, które są 
 Implementacja algorytmu opiera się na klasie Graph, która jest reprezentacją grafu w postaci list sąsiedztwa:
 \begin{lstlisting}
 public class Graph {
-    private Map<String, Set<String>> neighbourList;
+    private Map<Vertex, Vertex> vertices;
 /* konstruktor, metody */
 }
+\end{lstlisting}
+Klasa Vertex:
+\begin{lstlisting}
+public class Vertex implements Serializable {
+	public enum Color {
+		VISITED, UNVISITED
+	}
+
+	private final String name;
+	private Color color = Color.UNVISITED;
+	private int distance = 0;
+	private Set<Vertex> neighbours;
+	private float farthest = 0;
+	private float proximity = 0;
+	private float extended = 0;
+/* konstruktor, metody */
+}	
 \end{lstlisting}
 
 Jak widać, informacje przechowywane są w formie mapy wierchołek - zbiór sąsiadów. Każdy wierzchołek jest opisany ciągiem znaków, najczęściej jest to jeden znak alfanumeryczny. Nasza implementacja grafu umożliwia następujące operacje:
@@ -77,6 +94,30 @@ Z racji, że algorytm ten będzie służył do wyboru ruchów grze, wejście bę
 Algorytm nie będzie miał skomplikowanego wyjścia. W przypadku gry między dwoma komputerami będzie po prostu zwracał informację, który z nich wygrał. 
 
 Zakończenie gry odbywa się, gry któryś z graczy nie może już wykonać ruchu. W takiej sytuacji wygrywa jego przeciwnik.
+
+\section{Testy poprawnościowe}
+W celu sprawdzenia poprawności algorytmów zaimplementowano testy jednostkowe. Klasa
+GraphTests zawiera 4 testy: 
+\begin{lstlisting}
+ shouldAddNewEdge();
+ shouldClearGraph();
+ testDistanceToFarthestVertex();
+ testGame();
+\end{lstlisting}
+Testowana jest nasza implementacja grafu (dodawanie krawędzi, wierzchołków, usuwanie wierzchołków zgodnie z regułami gry) jak i pomocnicze metody na potrzeby heurystyki - obliczanie odległości do najdalszego wierzchołka (pojęcie zbliżone do średnicy grafu). W naszej implementacji grafu obliczenie pozostałych składowych heurystyki jest trywialne - liczba sąsiadów i liczba sąsiadów drugiego stopnia są bardzo łatwo dostępne.
+
+\section{Parametry heurystyki}
+Nasza heurystyka posiada 3 parametry - wagi poszczególnych składowych. Wartości wag znajdują się w zakresie $[0,1]$ sumując się do 1. Przeprowadzono eksperyment który miał na celu poznanie optymalnych wartości poszczególnych wag. Eksperyment polegał na uruchomieniu 120 gier, w których przeciwko sobie grały heurystyki z różnymi wagami poszczególnych składowych. Grafy na których rozgrywały się poszczególne gry były losowe (losowa liczba wierzchołków i krawędzi, losowa relacja między nimi. Otrzymane wyniki to:
+\begin{itemize}
+\item $p_1$ 0.114583336, (odległość do najdalszego wierzchołka od danego wierzchołka)
+\item $p_2$ 0.5052083, (liczba sąsiadów drugiego stopnia)
+\item $p_3$ 0.38020834 (liczba sąsiadów pierwszego stopnia)
+\end{itemize}
+
+\section{Wnioski}
+Analizując optymalne parametry heurystyki widać, że największy wpływ na jej wyniki ma druga składowa - ilość sąsiadów 2 stopnia. Wynika to z faktu, że usuwając wierzchołek z największą ilością sąsiadów 2 stopnia, usunięta zostanie największa część grafu. W końcowej fazie gry, gdy zostało już niewiele wierzchołków jest to bardzo ważne.
+
+Zauważono również, że wpływ na wynik decyzji podejmowanych na początku gry, gdy jest jeszcze wiele wierzchołków, jest niewielki. Kluczowe decyzje podejmowane są w przypadku gdy zostało kilka możliwych ruchów do końca rozgrywki. 
 
 
 \end{document}

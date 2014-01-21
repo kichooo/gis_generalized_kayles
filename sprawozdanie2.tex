@@ -14,7 +14,7 @@
 \newpage
 \section{Treść zadania}Dany jest graf G=(V,E). Gracze na zmianę wybierają wierzchołek w grafie, który następnie jest usuwany razem ze wszystkimi przyległymi wierzchołkami. Gracz wygrywa wtedy i tylko wtedy gdy jego przeciwnik nie może wykonać ruchu, czyli nie ma już żadnego wierzchołka do wyboru.
 \section{Algorytm}
-Poszukując algorytmu dla zadanego projektu, zaczęlismy od rozwiązań poprawnych. Nie mogąc takiego znaleźć zacząliśmy, tak jak jest w temacie projektu, poszukiwać odpowiedniej heurestyki dla tego problemu. Generalized Kayles jest uogólnieniem gry Kayles z tablicy na graf (z racji, że nie było to sprecyzowane w treści, przyjęliśmy skierowany). 
+Poszukując algorytmu dla zadanego projektu, zaczęlismy od rozwiązań poprawnych. Nie mogąc takiego znaleźć zacząliśmy, tak jak jest w temacie projektu, poszukiwać odpowiedniej heurestyki dla tego problemu. Generalized Kayles jest uogólnieniem gry Kayles z tablicy na graf (z racji, że nie było to sprecyzowane w treści, przyjęliśmy nieskierowany). 
 
 Strategia dla gry Kayles została już opracowana, gdyż gra ta należy do zbioru gier symetrycznych. Gracz rozpoczynający może zapewnić sobie zwycięstwo dzieląc listę na dwie części, a potem powielając ruchy przeciwnika. W ten sposób, pierwszym gracz, który nie będzie mógł wykonać ruchu staje się gracz, który wykonuje ruch jako drugi.
 
@@ -66,7 +66,7 @@ public class Vertex implements Serializable {
 }	
 \end{lstlisting}
 
-Jak widać, informacje przechowywane są w formie mapy wierchołek - zbiór sąsiadów. Każdy wierzchołek jest opisany ciągiem znaków, najczęściej jest to jeden znak alfanumeryczny. Nasza implementacja grafu umożliwia następujące operacje:
+Jak widać, informacje przechowywane są w formie mapy wierchołek - wierzchołek. Każdy wierzchołek jest opisany ciągiem znaków, najczęściej jest to jeden znak alfanumeryczny. Nasza implementacja grafu umożliwia następujące operacje:
 \begin{itemize}
 \item dodanie wierzchołka  - public void addVertex(String vertex)
 \item dodanie krawędzi - public void addEdge(String vertexFrom, String vertexTo)
@@ -115,9 +115,9 @@ Nasza heurystyka posiada 3 parametry - wagi poszczególnych składowych. Wartoś
 \end{itemize}
 
 \section{Wnioski}
-Analizując optymalne parametry heurystyki widać, że największy wpływ na jej wyniki ma druga składowa - ilość sąsiadów 2 stopnia. Wynika to z faktu, że usuwając wierzchołek z największą ilością sąsiadów 2 stopnia, usunięta zostanie największa część grafu. W końcowej fazie gry, gdy zostało już niewiele wierzchołków jest to bardzo ważne.
+Analizując optymalne parametry heurystyki widać, że największy wpływ na jej wyniki ma druga składowa - ilość sąsiadów 2 stopnia. Wynika to z faktu, że usuwając wierzchołek z największą ilością sąsiadów 2 stopnia, usunięta zostanie największa część grafu. W końcowej fazie gry, gdy zostało już niewiele wierzchołków, jest to bardzo ważne.
 
-Zauważono również, że wpływ na wynik decyzji podejmowanych na początku gry, gdy jest jeszcze wiele wierzchołków, jest niewielki. Kluczowe decyzje podejmowane są w przypadku gdy zostało kilka możliwych ruchów do końca rozgrywki. 
+Zauważono również, że wpływ na wynik decyzji podejmowanych na początku gry, gdy jest jeszcze wiele wierzchołków, jest niewielki. Kluczowe decyzje podejmowane są w przypadku, gdy zostało kilka możliwych ruchów do końca rozgrywki. 
 
 
 \end{document}

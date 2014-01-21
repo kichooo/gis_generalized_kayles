@@ -16,8 +16,8 @@ public class Graph {
 	 * @param verticesCount number of vertices to create.
 	 * @param edgesCount number of edges to create.
 	 */
-	public Graph(int verticesCount, int edgesCount) {
-		Random r = new Random(1337);
+	public Graph(int seed, int verticesCount, int edgesCount) {
+		Random r = new Random(seed);
 		for (int i = 0; i < verticesCount ; i++) {
 			vertices.put(Integer.toString(i), new Vertex(Integer.toString(i)));
 		}
@@ -33,9 +33,9 @@ public class Graph {
 	 * Create new random graph/
 	 * @param verticesCount number of vertices to create.
 	 */
-	public Graph(int verticesCount) {
+	public Graph(int seed, int verticesCount) {
 		
-		this(verticesCount, verticesCount * 3);
+		this(seed, verticesCount, verticesCount * 3);
 	}
 	
 	public void kaylesRemove(final String vertex) {
@@ -79,6 +79,7 @@ public class Graph {
 	}
 
 	public void addEdge(Vertex vertexFrom, Vertex vertexTo) {
+		if (vertexFrom.getNeighbours().contains(vertexTo)) return;
 		vertexFrom.getNeighbours().add(vertexTo);
 		vertexTo.getNeighbours().add(vertexFrom);
 	}
@@ -152,13 +153,13 @@ public class Graph {
 			for (Vertex other : this.vertices.values()) {
 				float distance = (v.getExtended() - other.getExtended())
 						* (v.getExtended() - other.getExtended())
-						* (v.getExtended() - other.getExtended())
+						* Math.abs((v.getExtended() - other.getExtended()))
 						+ (v.getFarthest() - other.getFarthest())
 						* (v.getFarthest() - other.getFarthest())
-						* (v.getFarthest() - other.getFarthest())
+						* Math.abs((v.getFarthest() - other.getFarthest()))
 						+ (v.getProximity() - other.getProximity())
 						* (v.getProximity() - other.getProximity())
-						* (v.getProximity() - other.getProximity());
+						* Math.abs((v.getProximity() - other.getProximity()));
 				if (distance < distanceToClosestRelative)
 					distanceToClosestRelative = distance;
 			}

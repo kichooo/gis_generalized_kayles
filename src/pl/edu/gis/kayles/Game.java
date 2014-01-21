@@ -23,7 +23,7 @@ public class Game {
 
     public static void startGame(GameProperties gameProperties) {
         properties = gameProperties;
-        graph = new Graph(gameProperties.getGraphSize());
+        graph = new Graph(1337, gameProperties.getGraphSize());
         graphWindow = new GraphWindow(gameProperties.isSinglePlayer());
         graphWindow.showGraph(graph, false);
     }
